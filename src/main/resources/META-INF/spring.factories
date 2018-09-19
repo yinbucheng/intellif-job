@@ -1,0 +1,3 @@
+org.springframework.boot.env.EnvironmentPostProcessor=cn.intellif.intellifjob.config.EnviromentUtils
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=cn.intellif.intellifjob.config.ApplicationUtils,\
+cn.intellif.intellifjob.config.ElasticJobConfig,cn.intellif.intellifjob.excute.JobExcute
