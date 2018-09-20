@@ -2,10 +2,11 @@ package cn.intellif.intellifjob.excute;
 
 
 import cn.intellif.intellifjob.annotation.IntellifSimpleJob;
+import cn.intellif.intellifjob.config.ApplicationUtils;
 import cn.intellif.intellifjob.config.EnviromentUtils;
 import cn.intellif.intellifjob.core.CoreDefination;
 import cn.intellif.intellifjob.event.ApplicationFinishEvent;
-import cn.intellif.utils.ScannerUtils;
+import cn.intellif.intellifjob.utils.ScannerClassUtils;
 import com.dangdang.ddframe.job.config.JobCoreConfiguration;
 import com.dangdang.ddframe.job.config.simple.SimpleJobConfiguration;
 import com.dangdang.ddframe.job.lite.api.JobScheduler;
@@ -15,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
+import javax.annotation.Resource;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,8 +37,8 @@ public class JobExcute implements ApplicationListener {
             id = clazz.getName();
         }
         id = resovleName(id);
-        String core = intellifSimpleJob.core();
-        core = resovleName(core);
+        String cron = intellifSimpleJob.cron();
+        cron = resovleName(cron);
         String data = intellifSimpleJob.shardingTotalCount();
         data = resovleName(data);
         int count = Integer.parseInt(data);
@@ -42,11 +46,14 @@ public class JobExcute implements ApplicationListener {
         itemParameters = resovleName(itemParameters);
         CoreDefination coreDefination = new CoreDefination();
         coreDefination.setClazz(clazz);
-        coreDefination.setCore(core);
+        coreDefination.setCron(cron);
         coreDefination.setName(id);
         coreDefination.setItemParameters(itemParameters);
         coreDefination.setShardingTotalCount(count);
-        simpleCores.add(coreDefination);
+        boolean addFlag = simpleCores.add(coreDefination);
+        if(addFlag){
+            reflectField(clazz);
+        }
     }
 
     private static String resovleName(String name){
@@ -55,6 +62,32 @@ public class JobExcute implements ApplicationListener {
            return (String) EnviromentUtils.get(temp);
         }
         return name;
+    }
+
+    private static void reflectField(Class clazz){
+        try {
+            Field[] fields = clazz.getDeclaredFields();
+            if (fields != null && fields.length > 0) {
+                for (Field field : fields) {
+                    if (Modifier.isStatic(field.getModifiers())) {
+                        Autowired autowired = field.getAnnotation(Autowired.class);
+                        if (autowired != null) {
+                            field.setAccessible(true);
+                            field.set(null, ApplicationUtils.getBean(field.getType()));
+                        }else{
+                           Resource resource =  field.getAnnotation(Resource.class);
+                           if(resource!=null){
+                              String name =  resource.name();
+                              field.setAccessible(true);
+                              field.set(null,ApplicationUtils.getBean(name,field.getType()));
+                           }
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -69,15 +102,10 @@ public class JobExcute implements ApplicationListener {
     }
 
     private static void initJob(String packageName){
-       List<String> classNames =  ScannerUtils.resovleClass(packageName);
-       for(String className:classNames){
-           try {
-               Class clazz =Class.forName(className);
-               if(clazz.getAnnotation(IntellifSimpleJob.class)!=null){
-                   addSimpleJob(clazz);
-               }
-           } catch (ClassNotFoundException e) {
-               e.printStackTrace();
+       Set<Class<?>> clazzs = ScannerClassUtils.getClzFromPkg(packageName);
+       for(Class clazz:clazzs){
+           if(clazz.getAnnotation(IntellifSimpleJob.class)!=null){
+               addSimpleJob(clazz);
            }
        }
     }
@@ -88,7 +116,7 @@ public class JobExcute implements ApplicationListener {
               for(CoreDefination coreDefination:simpleCores){
                   int shardingTotalCount = coreDefination.getShardingTotalCount();
                   JobCoreConfiguration jobCoreConfiguration = null;
-                  JobCoreConfiguration.Builder builder = JobCoreConfiguration.newBuilder(coreDefination.getName(), coreDefination.getCore(), shardingTotalCount);
+                  JobCoreConfiguration.Builder builder = JobCoreConfiguration.newBuilder(coreDefination.getName(), coreDefination.getCron(), shardingTotalCount);
                   if(!coreDefination.getItemParameters().equals("")) {
                       builder.shardingItemParameters(coreDefination.getItemParameters());
                   }

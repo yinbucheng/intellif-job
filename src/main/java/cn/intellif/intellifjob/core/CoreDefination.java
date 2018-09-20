@@ -1,7 +1,7 @@
 package cn.intellif.intellifjob.core;
 
 public class CoreDefination {
-    private String core;
+    private String cron;
     private Class clazz;
     private String name;
     private Integer shardingTotalCount;
@@ -23,12 +23,12 @@ public class CoreDefination {
         this.shardingTotalCount = shardingTotalCount;
     }
 
-    public String getCore() {
-        return core;
+    public String getCron() {
+        return cron;
     }
 
-    public void setCore(String core) {
-        this.core = core;
+    public void setCron(String cron) {
+        this.cron = cron;
     }
 
     public Class getClazz() {

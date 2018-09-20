@@ -16,4 +16,13 @@ public class ApplicationUtils implements ApplicationContextAware {
     public static ApplicationContext getApplicationContext(){
         return applicationContext;
     }
+
+
+    public static <T> T getBean(Class<T> clazz){
+        return applicationContext.getBean(clazz);
+    }
+
+    public static <T> T getBean(String name,Class<T> clazz){
+        return applicationContext.getBean(name,clazz);
+    }
 }

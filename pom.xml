@@ -43,11 +43,6 @@
 			<version>2.1.5</version>
 		</dependency>
 
-		<dependency>
-			<groupId>cn.intellif</groupId>
-			<artifactId>Scanner-Utils</artifactId>
-			<version>1.0.0</version>
-		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -67,14 +62,6 @@
 		</snapshotRepository>
 	</distributionManagement>
 
-	<!--<build>-->
-		<!--<plugins>-->
-			<!--<plugin>-->
-				<!--<groupId>org.springframework.boot</groupId>-->
-				<!--<artifactId>spring-boot-maven-plugin</artifactId>-->
-			<!--</plugin>-->
-		<!--</plugins>-->
-	<!--</build>-->
 
 	<build>
 		<pluginManagement>

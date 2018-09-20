@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 public @interface IntellifSimpleJob {
     String id() default "";
     //这里可以输入基本和${}
-    String core();
+    String cron();
     String shardingTotalCount() default "1";
     String itemParameters() default "";
 }
