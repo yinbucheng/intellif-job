@@ -57,6 +57,11 @@ public class JobExcute implements ApplicationListener {
         }
     }
 
+    /**
+     * 解析是否为springboot中的${}表达式如果是从springboot中获取其值
+     * @param name
+     * @return
+     */
     private static String resovleName(String name){
         if(name.startsWith("${")){
             String temp = name.substring(2,name.length()-1);
@@ -65,6 +70,10 @@ public class JobExcute implements ApplicationListener {
         return name;
     }
 
+    /**
+     * 将定时器类中使用spring ioc对象反射上去
+     * @param clazz
+     */
     private static void reflectField(Class clazz){
         try {
             Field[] fields = clazz.getDeclaredFields();
@@ -91,6 +100,10 @@ public class JobExcute implements ApplicationListener {
         }
     }
 
+    /**
+     * 获取事件通知并执行开启定时器
+     * @param applicationEvent
+     */
     @Override
     public void onApplicationEvent(ApplicationEvent applicationEvent) {
         if(applicationEvent instanceof ApplicationFinishEvent){
