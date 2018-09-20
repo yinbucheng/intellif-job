@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperConfiguration;
 import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperRegistryCenter;
 
+/**
+ * author 尹冲
+ */
 public class ElasticJobConfig {
 
 

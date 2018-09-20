@@ -1,5 +1,8 @@
 package cn.intellif.intellifjob.core;
 
+/**
+ * author 尹冲
+ */
 public class CoreDefination {
     private String cron;
     private Class clazz;

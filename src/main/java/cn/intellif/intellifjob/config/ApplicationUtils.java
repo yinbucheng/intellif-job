@@ -5,7 +5,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * author 尹冲
+ */
 public class ApplicationUtils implements ApplicationContextAware {
     public static ApplicationContext applicationContext;
     @Override

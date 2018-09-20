@@ -20,10 +20,11 @@ import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-
+/**
+ * author 尹冲
+ */
 public class JobExcute implements ApplicationListener {
     @Autowired
     private ZookeeperRegistryCenter zookeeperRegistryCenter;
