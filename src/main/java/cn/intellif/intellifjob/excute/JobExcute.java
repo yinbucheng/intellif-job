@@ -12,7 +12,9 @@ import com.dangdang.ddframe.job.config.simple.SimpleJobConfiguration;
 import com.dangdang.ddframe.job.lite.api.JobScheduler;
 import com.dangdang.ddframe.job.lite.config.LiteJobConfiguration;
 import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperRegistryCenter;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
@@ -26,6 +28,8 @@ import java.util.Set;
  * author 尹冲
  */
 public class JobExcute implements ApplicationListener {
+
+    private static Logger logger = Logger.getLogger(JobExcute.class);
     @Autowired
     private ZookeeperRegistryCenter zookeeperRegistryCenter;
 
@@ -81,16 +85,27 @@ public class JobExcute implements ApplicationListener {
                 for (Field field : fields) {
                     if (Modifier.isStatic(field.getModifiers())) {
                         Autowired autowired = field.getAnnotation(Autowired.class);
+                        Resource resource =null;
                         if (autowired != null) {
                             field.setAccessible(true);
-                            field.set(null, ApplicationUtils.getBean(field.getType()));
-                        }else{
-                           Resource resource =  field.getAnnotation(Resource.class);
-                           if(resource!=null){
+                            Object bean = ApplicationUtils.getBean(field.getType());
+                            field.set(null, bean);
+                            logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>通过Autowired设置成功++++++++++++++++++++++++++++++++");
+                        }else if((resource =  field.getAnnotation(Resource.class))!=null){
                               String name =  resource.name();
                               field.setAccessible(true);
-                              field.set(null,ApplicationUtils.getBean(name,field.getType()));
-                           }
+                              Object bean = ApplicationUtils.getBean(name,field.getType());
+                              field.set(null,bean);
+                               logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>通过Resource设置成功++++++++++++++++++++++++++++++++");
+                        }else{
+                            Value value = field.getAnnotation(Value.class);
+                            if(value!=null) {
+                                String name = value.value();
+                                name = resovleName(name);
+                                field.setAccessible(true);
+                                field.set(null, name);
+                                logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>通过Value注入成功++++++++++++++++++++++++++++++++++");
+                            }
                         }
                     }
                 }
@@ -119,6 +134,7 @@ public class JobExcute implements ApplicationListener {
        Set<Class<?>> clazzs = ScannerClassUtils.getClzFromPkg(packageName);
        for(Class clazz:clazzs){
            if(clazz.getAnnotation(IntellifSimpleJob.class)!=null){
+              logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>加载类中..............."+clazz.getName());
                addSimpleJob(clazz);
            }
        }

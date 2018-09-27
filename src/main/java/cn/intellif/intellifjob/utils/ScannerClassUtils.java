@@ -124,7 +124,7 @@ public class ScannerClassUtils {
 
     private static Class<?> loadClass(String fullClzName) {
         try {
-            return Thread.currentThread().getContextClassLoader().loadClass(fullClzName);
+            return Class.forName(fullClzName);
         } catch (ClassNotFoundException e) {
            throw new RuntimeException(e);
         }
