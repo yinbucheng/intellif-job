@@ -174,8 +174,8 @@ public class JobExcute implements ApplicationListener {
                 jobScheduler.init();
                 logger.info("-------------------------------->success start intellif-job the class is:" + coreDefination.getClazz().getName());
             } catch (Exception e) {
-                logger.info("--------------error-------------->start intellif-job fail:" + coreDefination.getClazz().getName() + " casuse:" + e);
-                logger.error("--------------error-------------->start intellif-job fail:" + coreDefination.getClazz().getName());
+                logger.info("--------------error-------------->start intellif-job fail:" + coreDefination.getClazz().getName() + " cause:" + e);
+                logger.error("--------------error-------------->start intellif-job fail:" + coreDefination.getClazz().getName()+" cause:"+e);
                 System.exit(-1);
             }
         }
