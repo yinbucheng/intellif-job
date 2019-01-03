@@ -15,8 +15,9 @@ public abstract class IntellifEasyJob implements SimpleJob {
 
     @Override
     public void execute(ShardingContext shardingContext) {
-        logger.info("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...run");
+        logger.info("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...start run");
         executeAndLog(shardingContext);
+        logger.info("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...end run");
     }
 
     public void executeAndLog(ShardingContext shardingContext) {
