@@ -13,6 +13,10 @@ import org.slf4j.LoggerFactory;
 public abstract class IntellifEasyJob implements SimpleJob {
     private static Logger logger = LoggerFactory.getLogger(IntellifEasyJob.class);
 
+    /**
+     * 重写这个将无日志输出
+     * @param shardingContext
+     */
     @Override
     public void execute(ShardingContext shardingContext) {
         logger.info("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...start run");
@@ -20,6 +24,10 @@ public abstract class IntellifEasyJob implements SimpleJob {
         logger.info("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...end run");
     }
 
+    /**
+     * 重新这个方法可以打印执行中日志
+     * @param shardingContext
+     */
     public void executeAndLog(ShardingContext shardingContext) {
     }
 }
