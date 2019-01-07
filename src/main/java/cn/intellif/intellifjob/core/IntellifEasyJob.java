@@ -15,6 +15,7 @@ public abstract class IntellifEasyJob implements SimpleJob {
 
     /**
      * 重写这个将无日志输出
+     *
      * @param shardingContext
      */
     @Override
@@ -24,16 +25,17 @@ public abstract class IntellifEasyJob implements SimpleJob {
             long startTime = System.currentTimeMillis();
             executeAndLog(shardingContext);
             long endTime = System.currentTimeMillis();
-            logger.info("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...execute finish use "+(endTime-startTime)+" ms ");
-        }catch (Exception e){
-            logger.info("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...error cause:"+e);
-            logger.error("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...error cause:"+e);
+            logger.info("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...execute finish use " + (endTime - startTime) + " ms ");
+        } catch (Exception e) {
+            logger.info("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...error cause:" + e);
+            logger.error("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...error cause:" + e);
             throw new RuntimeException(e);
         }
     }
 
     /**
      * 重新这个方法可以打印执行中日志
+     *
      * @param shardingContext
      */
     public void executeAndLog(ShardingContext shardingContext) {
