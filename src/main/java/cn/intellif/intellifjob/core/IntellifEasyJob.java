@@ -20,8 +20,16 @@ public abstract class IntellifEasyJob implements SimpleJob {
     @Override
     public void execute(ShardingContext shardingContext) {
         logger.info("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...start run");
-        executeAndLog(shardingContext);
-        logger.info("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...end run");
+        try {
+            long startTime = System.currentTimeMillis();
+            executeAndLog(shardingContext);
+            long endTime = System.currentTimeMillis();
+            logger.info("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...execute finish use "+(endTime-startTime)+" ms ");
+        }catch (Exception e){
+            logger.info("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...error cause:"+e);
+            logger.error("--------------------->" + BeanUtils.getCurrentTime() + "...." + this.getClass().getName() + "...error cause:"+e);
+            throw new RuntimeException(e);
+        }
     }
 
     /**
